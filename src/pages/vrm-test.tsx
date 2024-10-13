@@ -1,35 +1,23 @@
 import Title from "@/components/ui/title"
-import { OrbitControls } from "@react-three/drei"
-import { Canvas, PrimitiveProps, useFrame, useLoader } from "@react-three/fiber"
+import { VRMLoaderPlugin } from "@pixiv/three-vrm"
+import { OrbitControls, useGLTF } from "@react-three/drei"
+import { Canvas, PrimitiveProps, useFrame } from "@react-three/fiber"
 import { useRef } from "react"
-import { GLTFLoader } from "three/examples/jsm/Addons.js"
 
 function Model() {
     const ref = useRef<PrimitiveProps>(null!)
-    // const { scene } = useLoader(
-    //     GLTFLoader,
-    //     "/models/VRM1_Constraint_Twist_Sample.vrm",
-    //     (loader) => {
-    //         loader.register((parser) => new VRMLoaderPlugin(parser))
-    //     },
-    // )
-    const url = "/models/toycar/ToyCar.gltf"
-    const { scene, animations } = useLoader(GLTFLoader, url)
-    useFrame((state, delta) => {
-        ref.current.rotation.y += delta
+    const url = "/models/VRM1_Constraint_Twist_Sample.vrm"
+    const { scene } = useGLTF(url, true, true, (loader) => {
+        loader.register((parser) => new VRMLoaderPlugin(parser))
     })
-    return (
-        <primitive
-            ref={ref}
-            object={scene}
-            dispose={null}
-            scale={[8, 8, 8]}
-            position={[0, 0, 0]}
-        />
-    )
+    useFrame((state, delta) => {
+        console.log(ref.current.userData)
+        // ref.current.userData.vrm.expressionManager.setValue("aa", Math.random())
+    })
+    return <primitive ref={ref} object={scene} />
 }
 
-export default function VrmDemo() {
+export default function VrmTest() {
     return (
         <>
             <Title>Vrm Test</Title>

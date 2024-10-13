@@ -1,23 +1,29 @@
 import Title from "@/components/ui/title"
 import { OrbitControls, useGLTF } from "@react-three/drei"
 import { Canvas, PrimitiveProps, useFrame, useLoader } from "@react-three/fiber"
-import { useRef } from "react"
-import { GLTFLoader } from "three/examples/jsm/Addons.js"
+import { useEffect, useRef, useState } from "react"
 
 type ModelProps = {
     url: string
 }
 
 function Model({ url }: ModelProps) {
-    const ref = useRef<PrimitiveProps>(null!)
-    const { scene } = useGLTF(url)
-    // const { scene, animations } = useLoader(GLTFLoader, url)
-    useFrame((state, delta) => {
-        ref.current.rotation.y += delta
-    })
+    const [gltf, setGltf] = useState<any>()
+    useEffect(() => {
+        if (!gltf) {
+            const {
+                GLTFLoader,
+            } = require("three/examples/jsm/loaders/GLTFLoader")
+            const loader = new GLTFLoader()
+            loader.load(url, (_gltf) => {
+                setGltf(_gltf)
+            })
+        }
+    }, [gltf])
+    const { GLTFLoader } = require("three/examples/jsm/loaders/GLTFLoader.js")
+    const { scene, animations } = useLoader(GLTFLoader, url)
     return (
         <primitive
-            ref={ref}
             object={scene}
             dispose={null}
             scale={[8, 8, 8]}
