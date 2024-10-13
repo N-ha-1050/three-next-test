@@ -2,7 +2,7 @@ import Title from "@/components/ui/title"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { VRMLoaderPlugin } from "@pixiv/three-vrm"
 import { useEffect, useRef, useState } from "react"
-import { GLTFLoader, GLTF } from "three-stdlib"
+import { GLTFLoader, GLTF, GLTFLoaderPlugin } from "three-stdlib"
 import { Html, OrbitControls } from "@react-three/drei"
 
 const c2n: { [key: string]: number } = {
@@ -44,6 +44,7 @@ function Model({ text }: { text: string }) {
     useEffect(() => {
         if (!gltf) {
             const loader = new GLTFLoader()
+            // @ts-ignore
             loader.register((parser) => new VRMLoaderPlugin(parser))
             loader.load(
                 "models/VRM1_Constraint_Twist_Sample.vrm",
