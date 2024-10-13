@@ -1,25 +1,25 @@
 import Title from "@/components/ui/title"
-import { Canvas, useFrame } from "@react-three/fiber"
+import { Canvas, ThreeElements, useFrame } from "@react-three/fiber"
 import { useRef, useState } from "react"
 import { OrbitControls } from "@react-three/drei"
 import { Mesh } from "three"
 
-function Box(props: JSX.IntrinsicElements["mesh"]) {
-    const ref = useRef<Mesh>(null!)
+function Box(props: ThreeElements["mesh"]) {
+    const meshRef = useRef<Mesh>(null!)
 
-    const [hovered, hover] = useState(false)
-    const [clicked, click] = useState(false)
+    const [hovered, setHover] = useState(false)
+    const [active, setActive] = useState(false)
 
-    useFrame((state, delta) => (ref.current.rotation.x += delta))
+    useFrame((state, delta) => (meshRef.current.rotation.x += delta))
 
     return (
         <mesh
             {...props}
-            ref={ref}
-            scale={clicked ? 1.5 : 1}
-            onClick={(event) => click(!clicked)}
-            onPointerOver={(event) => (event.stopPropagation(), hover(true))}
-            onPointerOut={(event) => hover(false)}
+            ref={meshRef}
+            scale={active ? 1.5 : 1}
+            onClick={(event) => setActive(!active)}
+            onPointerOver={(event) => setHover(true)}
+            onPointerOut={(event) => setHover(false)}
         >
             <boxGeometry args={[1, 1, 1]} />
             <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
